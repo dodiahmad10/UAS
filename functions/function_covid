@@ -1,0 +1,64 @@
+<?php
+require "koneksi.php";
+
+function query_view($query_view) {
+    global $koneksi;
+    $result = mysqli_query($koneksi, $query_view);
+    $rows = [];
+
+    while($row = mysqli_fetch_assoc($result)) 
+    {
+        $rows[] = $row;
+    }
+    return $rows;
+}
+
+function tambah($data_covid){
+    global $koneksi;
+    
+    $kode_daerah = htmlspecialchars($data_covid["kode_daerah"]);
+    $nama_daerah = htmlspecialchars($data_covid["nama_daerah"]);	
+    $positif_covid = htmlspecialchars($data_covid["positif_covid"]);
+    $dirawat = htmlspecialchars($data_covid["dirawat"]);
+    $sembuh = htmlspecialchars($data_covid["sembuh"]);
+    $meninggal = htmlspecialchars($data_covid["meninggal"]);
+   
+    //query
+    $query = "INSERT INTO tb_pantauan
+                VALUES
+                ('','$kode_daerah','$nama_daerah', '$positif_covid', '$dirawat', '$sembuh', '$meninggal')
+    ";
+    mysqli_query($koneksi, $query);
+
+    return mysqli_affected_rows($koneksi);
+}
+
+function hapus($id_number){
+    global $koneksi;
+    mysqli_query($koneksi, "DELETE FROM tb_pantauan WHERE id_number = $id_number");
+
+    return mysqli_affected_rows($koneksi);
+}
+
+function update($data_covid){
+    global $koneksi;
+    //ambil elemen data
+$positif_covid = htmlspecialchars($data_covid["positif_covid"]);
+    $dirawat = htmlspecialchars($data_covid["dirawat"]);
+    $sembuh = htmlspecialchars($data_covid["sembuh"]);
+    $meninggal = htmlspecialchars($data_covid["meninggal"]);
+   
+    //query
+    $query = "UPDATE tb_pantauan SET
+                positif_covid = '$positif_covid',
+		dirawat = '$dirawat',
+                sembuh = '$sembuh',
+                meninggal = '$meninggal',
+            WHERE id_number = $id_number,
+            ";
+    mysqli_query($koneksi, $query);
+
+    return mysqli_affected_rows($koneksi);
+}
+
+?>
